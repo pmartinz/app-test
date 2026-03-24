@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: secure-workload
+  namespace: default
+  labels:
+    app: secure-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: secure-app
+  template:
+    metadata:
+      labels:
+        app: secure-app
+    spec:
+      # ==========================================
+      # 1. POD-LEVEL SECURITY CONTEXT
+      # Applies globally to all containers in the Pod
+      # ==========================================
+      securityContext:
+        runAsNonRoot: true
+        # It's best practice to explicitly set a non-root user ID
+        runAsUser: 1000 
+        runAsGroup: 3000
+        fsGroup: 2000
+
+      containers:
+        - name: secure-container
+          # Note: Ensure the image you use supports running as non-root!
+          # (e.g., standard nginx fails as non-root, use nginxinc/nginx-unprivileged instead)
+          image: busybox:latest
+          command: ["sh", "-c", "sleep 3600"]
+          
+          # ==========================================
+          # 2. CONTAINER-LEVEL SECURITY CONTEXT
+          # Overrides and adds to the Pod-level settings
+          # ==========================================
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
