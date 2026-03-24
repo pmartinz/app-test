@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: secure-workload
-  namespace: default
+  namespace: test
   labels:
     app: secure-app
 spec:
