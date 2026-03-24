@@ -30,8 +30,9 @@ spec:
         - name: secure-container
           # Note: Ensure the image you use supports running as non-root!
           # (e.g., standard nginx fails as non-root, use nginxinc/nginx-unprivileged instead)
-          image: busybox:latest
-          command: ["sh", "-c", "sleep 3600"]
+          #image: busybox:latest
+          image: nginxinc/nginx-unprivileged
+          #command: ["sh", "-c", "sleep 3600"]
           
           # ==========================================
           # 2. CONTAINER-LEVEL SECURITY CONTEXT
